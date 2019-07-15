@@ -35,6 +35,89 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script>
+
+
+        // Get input value from user
+        // make an API call
+        // get input value from user
+        // Spit data back out on page
+     
+
+
+        const app = {}
+        app.key = "jqh9IScXWAjRPK0iMCj0S3jRLHO4fqRu";
+
+           app.displayGifs = (gifs) => {
+                console.log("in display gifs: ", gifs)
+                // loop over an aray
+                gifs.forEach(function(gif){
+                    console.log("Gif title: ", gif.title)
+                    console.log("Gif image: ", gif.images.original_still.url)
+
+                    const gifHtml = `
+                            <div class="gif-box">
+                                <div class="img-box">
+                                    <img src="${gif.images.original_still.url}" alt="">
+                                </div>
+                                <p class="gif-title">${gif.title}</p>
+                            </div>
+                        `
+
+                    $('.results').append(gifHtml)
+
+
+                })
+            }
+
+        app.getGifs = (query) => {
+            console.log("curry in getgifts" ,query)  
+            console.log("get gifs...")
+            $.ajax({
+                url: "https://api.giphy.com/v1/gifs/search",
+                method: "GET",
+                dataType: "json",
+                data: {
+                    api_key: app.key,
+                    q: query
+                }
+            }).then( res => {
+                console.log("Result of getGifs" ,res.data)
+                const gifArray = res.data;
+                 // once we have gifs, display gifs to page
+                app.displayGifs(gifArray);
+            
+
+            })
+        }
+
+        app.init = () => {
+            console.log("App Initalized...")
+            $('form').on("submit", function(e){
+                e.preventDefault()
+                // empty out the result with each search
+                $('.results').empty()
+                console.log("Form submitted..")
+
+                const userInput = $('input[type="text"]').val()
+
+                // send user input app.getGifs 
+                app.getGifs(userInput)
+                // console.log(userInput)
+            })
+            
+        }
+
+        // Document Ready
+        $(function () {
+            console.log("Document ready...")
+            // Initalzie app
+            app.init()
+
+        });
+
+
+
+
     </script>
 </body>
 </html>
